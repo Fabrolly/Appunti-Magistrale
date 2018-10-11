@@ -299,4 +299,41 @@ In forma generale:
 
 *Non avendo premesse questa è sostanzilamente la dimostrazione di partenza di un programma.*
 
+La regola di derivazione si può usare anche quando l'espressione contiene la variabile, tipo:
+```
+x=x+2
+```
+-----
+**ESERCIZIO PER CASA**
+
+```
+
+{Y<=3} Z:=(2*y) +1 {x<=7 AND y<=3}
+__________________________________
+
+```
+Da risolvere in due modi diversi:
+* ragionando e dire se è vero
+* fare dimostrazione formale
+
+------
+**ESERCIZIO IN AULA**
+
+```
+__________________________________
+{p} if B then C1 else C2 endif {q}
+
+```
+
+Chiaramente devo distinguere due casi
+* B vero
+* B falso
+
+
+```
+{p AND B} C1 {q}       {p AND NOT B} C2 {q}
+___________________________________________
+{p} if B then C1 else C2 endif {q}
+
+```
 
