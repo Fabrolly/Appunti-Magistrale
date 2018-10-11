@@ -222,8 +222,81 @@ Indico che una tripla è dimostrabile
 $\vdash$  $\{p\} C \{q\}$
 
 
-La dimostrabilità della ttripla **implica** la correttezza della stessa: (quello che dimostro è anche vero, non dimostro se è falso)
+La dimostrabilità della tripla **implica** la correttezza della stessa: (quello che dimostro è anche vero, non dimostro se è falso)
 
 $\vdash$ J  **=>**  $\models$ J 
 
 *La dimostrabilità implica la correttezza.*
+
+
+## Regola di derivazone
+```
+
+        T1, T2, ..., Tn    #premesse (triple)
+        _______________
+                T          #conclusione
+```
+------
+**Regola di derivazione**
+
+Suppongo che il mio comando sia
+```
+SKIP
+```
+Quindi per questa istruzine qualunque sia la precondizione **p** questo comando sarà vero. Non ho premsse
+
+**Dimostrazione:**
+
+$\{p\} SKIP \{q\}$ $\forall$ p
+
+---------
+**Regola derviazione per implicazione**
+
+
+Suppongo ora di aver già dimostrato questa tripla
+
+$\{p\} C \{q\}$
+
+**dimostrazione**
+
+```
+    p1->p {p}C{q}
+    _____________________
+        {p1}C{q}
+```
+-----
+**Regola di derivazione della sequenza**
+
+```
+     {p}C1{q} {q}C2{r}
+    _____________________
+        C1,C2
+```
+Combinando le due premesse ottengo:
+```
+     {p}C1{q} {q}C2{r}
+    _____________________
+        {p} C1,C2 {r}
+```
+-----
+**Regola di dervivazione per l'assegnamento**
+
+Posso ragionare direttamente sulla post condizione e istruzione in se. Non ho premesse quindi
+```
+     x=E
+     x=2*y+1 {x>=0}
+
+    {2*y+1>=0} x=2*y+1 {x>=0}
+```
+
+In forma generale:
+
+```
+     {p}C1{q} {q}C2{r}
+    _____________________
+        {q[E/x]} x=E {q}
+```
+
+*Non avendo premesse questa è sostanzilamente la dimostrazione di partenza di un programma.*
+
+
