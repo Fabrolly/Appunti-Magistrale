@@ -222,7 +222,7 @@ Indico che una tripla è dimostrabile
 $\vdash$  $\{p\} C \{q\}$
 
 
-La dimostrabilità della tripla **implica** la correttezza della stessa: (quello che dimostro è anche vero, non dimostro se è falso)
+La dimostrabilità della ttripla **implica** la correttezza della stessa: (quello che dimostro è anche vero, non dimostro se è falso)
 
 $\vdash$ J  **=>**  $\models$ J 
 
