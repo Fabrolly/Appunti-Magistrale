@@ -250,7 +250,7 @@ Quindi per questa istruzine qualunque sia la precondizione **p** questo comando 
 $\{p\} SKIP \{q\}$ $\forall$ p
 
 ---------
-**Regola derviazione per implicazione**
+**Regola derviazione per conseguenza/implicazione**
 
 
 Suppongo ora di aver già dimostrato questa tripla
@@ -308,7 +308,7 @@ x=x+2
 
 ```
 
-{Y<=3} Z:=(2*y) +1 {x<=7 AND y<=3}
+{Y<=3} Z:=(2*y)+1 {x<=7 AND y<=3}
 __________________________________
 
 ```
@@ -317,7 +317,7 @@ Da risolvere in due modi diversi:
 * fare dimostrazione formale
 
 ------
-**ESERCIZIO IN AULA**
+**Regola di derivazione della scelta**
 
 ```
 __________________________________
@@ -336,4 +336,329 @@ ___________________________________________
 {p} if B then C1 else C2 endif {q}
 
 ```
+---
+## Esercizo
+```
+? {y<=2} x::=(2*y)+1 {x<=7 AND y<=3}
+```
 
+? -> Ancora da derivare
+
+L'istruzione è un'assegnamento, quindi devo applicare la **regola dell'assegnamento.**
+Parto dalla post condizione e ricavo la precondizione che mi garantisce una tripla valida.
+
+Quindi, la postcondizione la riscrivo che rimane invariata, idem il comando
+```
+      x::=(2*y)+1 {x<=7 AND y<=3}
+```
+
+Sostituisco nella precondizione la postcondizione sostituendo X
+```
+⊢ (ass) {(2*y)+1<=7 AND y<=3} x::= (2*y) +1 {x<=7 AND y<=3}
+```
+⊢ (ass) -> derivata con assegnamento 
+
+La precondizione non è proprio quella che ci serve però.
+
+Posso riscrivere come
+
+```
+⊢ {y<=3 AND y<=3} x::=(2*y) +1 {q}
+```
+
+Posso rimuovere una dei due y<=3
+```
+⊢ {y<=3} x::=(2*y) +1 {q}
+```
+**Regola di conseguenza**: se all'inizio y<=2 allora y è per forza y<=3. 
+**y<=2 è più forte**
+
+```
+⊢ (conseg) {y<=2} x::=(2*y)+1 {q}
+```
+---
+## Esercizo
+```
+? {x>0 AND z>0} y::=x*y {y>0}
+```
+
+Vedo già a intuito che è corretta, formalizziamo
+
+L'istruzione è un'assegnamento, quindi devo applicare la **regola dell'assegnamento.**
+Parto dalla post condizione e ricavo la precondizione che mi garantisce una tripla valida.
+
+Quindi, la postcondizione la riscrivo che rimane invariata, idem il comando
+```
+       y::=x*y {y>0}
+```
+
+Sostituisco nella precondizione la postcondizione sostituendo X
+```
+⊢ (ass) ? {x*z>0} y::=x*y {y>0}
+```
+La precondizione non è proprio quella che ci serve però.
+
+Posso riscrivere come (facendo attenzione che sia equivalente)
+
+```
+⊢ (ass) ? {(x>0 AND z>0) OR (x<0 AND z<0)} y::=x*y {y>0}
+```
+
+Siamo vicini alla forma che ci serve ma non del tutto.
+
+**Regola di conseguenza**: all'inizio ho x>0 AND z>0 che è vera per forza, quindi della seconda parte del mio OR non mi interessa visto che la condizione è già vera così.
+
+
+```
+⊢ (conseg) {x>0 AND z>0} x::=(2*y)+1 {q}
+```
+Dimostrato.
+
+---
+## Esercizo
+```
+? {x=a*y} x::=x+a, y:=y+1 {x=a*y}
+```
+
+Vedo già a intuito che è corretta, formalizziamo.
+
+Precondizione e Postocondizione è uguale.
+
+L'istruzione  sono due assegnamentu, quindi devo applicare la **regola per la sequenza.**
+Posso concatenarle.
+
+All'inizio uso comunque la **regola per l'assegnamento.**
+
+
+```
+⊢ (ass) {x=a*(y+1)} y::=y+1 {x=a*y}
+
+ovvero
+
+⊢ (ass) {x=a*y+a)} y::=y+1 {x=a*y}
+```
+
+Ancora con la regola per l'**assegnamento**, il comando nella poscondizione:
+
+```
+⊢ (ass) {x+a=ay+a)} x::=x+a {x=a*y+a}
+
+semplifico:
+
+⊢ (ass) {x=ay)} x::=x+a {x=a*y+a}
+```
+
+Ora che la postcondizione di una è uguale alla precondizione dell'altra applico la **regola dellla sequenza.**
+
+```
+⊢ (seq) {x=a*y)} C1, C2 {x=a*y}
+```
+
+Dimostrato
+
+---
+## Esercizo sulle condizioni di scelta
+```
+if (x<=0) then
+    y:= -2*x
+else
+    y:=2*x
+endif
+```
+
+```
+? {true}S{Y>=0 AND x<=Y}
+```
+
+True mi diche che la postocondizione è sempre vera indipendentemente dai valori iniziali.
+
+**Regola di derivazione della scelta.** Riportata di seguito
+```
+{p AND B} C1 {q}       {p AND NOT B} C2 {q}
+___________________________________________
+{p} if B then C1 else C2 endif {q}
+```
+
+Quindi nel nostro caso
+
+```
+? {TRUE AND X<0}  Y:=-2*x {Y>=0 AND X<=Y}
+? {TRUE AND X>=0} Y:=2*x {Y>=0 AND X<=Y}
+```
+
+Parto dal primo
+
+```
+⊢ (ass) {-2*x>=0 AND x<=-2x} C1 {Y>=0 AND X<=Y}
+
+che posso riscrivere come
+
+⊢ (ass) {x<=0 AND 3x<=0} C1 {Y>=0 AND X<=Y}
+
+ovvero
+
+⊢ (ass) {x<=0} C1 {Y>=0 AND X<=Y}
+
+Non è ancora uguale alla precondizione che ci serve
+ Applico regola di implicazione
+
+ ⊢ (ass) {x<=0 AND 3x<=0} C1 {Y>=0 AND X<=Y}
+```
+Secondo assegnamento
+
+```
+⊢ (ass) {2*x>=0 AND x<=2x} C2 {Y>=0 AND X<=Y}
+
+da cui
+
+⊢ {x>=0 AND 0<=x} C2 {Y>=0 AND X<=Y}
+```
+
+Applico la **regola di scelta:**
+
+```
+⊢ (scelta) {TRUE} S {Y>=0 AND X<=Y}
+```
+---
+## Esercizo PER CASA
+
+```
+if (x<y) then
+    m:=y
+else
+    m:=x
+endif
+```
+Tripla da dimostrare
+
+```
+{true} S {m=max(x,y)}
+```
+
+---
+## Ultima regola: iterazione
+
+E' l'unico casa in cui posso avere correttezza parziale.
+
+Iniziamo dalla **correttezza parziale**, ovvero suppongo che termini.
+
+W=
+```
+while B do
+    C
+endWhile
+```
+
+Quando è possibile derivare:
+
+```
+? {p} W {q}
+```
+Chiamiamo I una inviariante di questo ciclo.
+
+i= invariante, che non cambia con il ciclo e si indica
+```
+ ⊢ {i AND B} C {i}
+```
+Se, dato il programma W e data una formula I riesco a derivare la tripla qui sopra allora diciamo che **I è un'invariante** per questo programma.
+
+```
+ ⊢ {i} W {i AND NOT B}
+```
+
+Quindi ora che ho l'invariante, la regola di **derivazione per l'iterazione**:
+```
+  {p AND B} C {p}   #premessa: ho trovato un'invariante
+ _________________________   (parziale)
+  {p} W {p AND NOT B}
+```
+
+NON SCRIVO PIù PARZIALE OGNI VOLTA MA SI INTENDE SEMPRE PARZIALE (per ora)
+
+Tipica struttura di un programma. Codice, ciclo, codice. Vediamo come la risolvo
+
+```
+ C1
+ W
+ C2
+
+ Suppongo di voler dimostrare la tripla
+ ? {p} P {q}
+```
+
+Cerco un invariante
+
+```
+{i AND B} C {i}
+⊢ {i} W {i AND NOT B}
+
+{p}C1{i}
+
+⊢ {p} C1; W {i AND NOT B}
+
+{i}C2{q}
+```
+----
+### Esercizio di esempio
+```
+y:=0 ; x:=0;
+
+while y<b do
+    x:=x+a
+    y:=y+1
+endWhile
+```
+* P= tutto il codice
+* W= il ciclo
+* C=il codice dentro al ciclo
+
+(prodotto come somme consecutive)
+
+**Tripla da dimostrare**
+
+```
+{b>=0} P {z=a*b}
+```
+
+Prima cosa devo **trovare l'invariante.**
+
+```
+abbiamo già dimostrato in un sercizio prima questa tripla:
+? {b>=0} P {x=a*b}
+
+ed era  (doppia regola della)
+
+⊢ {x=a*y} C {x=a*y}
+```
+
+A noi serve che sia un invariante, qiondi devo dimostrare la tripla
+```
+? {x=a*y AND y<b} C{x=a*y}
+
+regola della conseguenza mi da la conferma
+
+⊢ (cons) {x=a*y AND y<b} C{x=a*y}
+```
+Quindi a*y è una inviariante
+
+```
+⊢ (iter) {x=a*y} W {x=a*y and b<=Y}
+```
+
+```
+? {b>=0} y:=0, x:=0 {x=a*y}   ##il mio programma è indipendente da b, quindi
+
+regola assegnamento(?)   (0=0 -> True)
+
+ ⊢   {0=0} y:=0, x:=0 {x=a*y}
+
+  ⊢   {b>=0} C1, W {x=a*y and B<=y}
+
+```
+
+
+BOOO
+```
+? {y<=b AND y>} y:=0, x:=0 {x=a*y}   ##il mio programma è indipendente da b, quindi
+
+```
